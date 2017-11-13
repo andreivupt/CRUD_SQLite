@@ -7,25 +7,12 @@
     tools:context="br.com.crud_sqlite.Activity.MainActivity">
 
     <LinearLayout
+        android:id="@+id/llButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/etNome"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="nome"/>
-        <EditText
-            android:id="@+id/etIdade"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="idade"/>
-        <EditText
-            android:id="@+id/etRamo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="ramo da familia"/>
+
         <Button
             android:id="@+id/btnAdd"
             android:layout_width="match_parent"
@@ -46,6 +33,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Deletar pessoa"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textSize="20dp"
+            android:gravity="center_horizontal"
+            android:text="Lista de usuários"/>
+
+        <ListView
+            android:id="@+id/lvUsers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+        </ListView>
     </LinearLayout>
 
 </RelativeLayout>

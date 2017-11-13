@@ -6,16 +6,24 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import br.com.crud_sqlite.Adapter.AdapterUsuario;
+import br.com.crud_sqlite.Interface.ServiceUsuario;
 import br.com.crud_sqlite.Model.Pessoa;
+import br.com.crud_sqlite.Model.UsuarioGitHub;
 import br.com.crud_sqlite.R;
 import br.com.crud_sqlite.Sqlite.Create;
 import br.com.crud_sqlite.Sqlite.Delete;
 import br.com.crud_sqlite.Sqlite.Read;
 import br.com.crud_sqlite.Sqlite.Update;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -27,6 +35,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button btnUpdate;
     Button btnRead;
     Button btnDelete;
+
+    ListView lvUsers;
+
+    ServiceUsuario service;
+    AdapterUsuario adapter;
+    Call<List<UsuarioGitHub>> call = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +59,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnRead.setOnClickListener(this);
         btnDelete = (Button) findViewById(R.id.btnDelete);
         btnDelete.setOnClickListener(this);
+
+        lvUsers = (ListView) findViewById(R.id.lvUsers);
+
+        service = ServiceUsuario.retrofit.create(ServiceUsuario.class);
+
+        call = service.getUsers();
+        call.enqueue(new Callback<List<UsuarioGitHub>>() {
+            @Override
+            public void onResponse(Call<List<UsuarioGitHub>> call, Response<List<UsuarioGitHub>> response) {
+                if (response != null){
+                    List<UsuarioGitHub> list = response.body();
+                    if (list != null){
+                        adapter = new AdapterUsuario(getBaseContext(), list);
+                        lvUsers.setAdapter(adapter);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<UsuarioGitHub>> call, Throwable t) {
+                Toast.makeText(getBaseContext(),"Erro em buscar as informações",Toast.LENGTH_LONG).show();
+            }
+        });
+
         Create c = new Create(getApplicationContext());
         c.createTable();
     }
@@ -55,6 +93,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()){
 
             case R.id.btnAdd:
+
+
                 Pessoa p = new Pessoa();
                 p.setNome(etNome.getText().toString());
                 p.setIdade(Integer.parseInt(etIdade.getText().toString()));
